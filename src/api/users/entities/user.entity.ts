@@ -4,9 +4,11 @@ import {
   Column,
   CreateDateColumn,
   Entity,
+  ManyToOne,
   PrimaryGeneratedColumn,
   UpdateDateColumn,
 } from 'typeorm';
+import { Role } from './role.entity';
 
 @Entity()
 export class User {
@@ -16,7 +18,7 @@ export class User {
   @Column({ type: 'varchar' })
   email!: string;
 
-  @Exclude({ toPlainOnly: true })
+  @Exclude()
   @Column({ type: 'varchar' })
   password!: string;
 
@@ -34,4 +36,11 @@ export class User {
 
   @Column({ type: 'timestamp', nullable: true, default: null })
   public lastLoginAt: Date | null;
+
+  @ManyToOne(() => Role, (role) => role.id)
+  role: Role;
+
+  constructor(partial: Partial<User>) {
+    Object.assign(this, partial);
+  }
 }

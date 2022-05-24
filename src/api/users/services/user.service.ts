@@ -1,11 +1,13 @@
-import { Injectable } from '@nestjs/common';
+import { Injectable, UseGuards } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Request } from 'express';
 import { Repository } from 'typeorm';
-import { UpdateNameDto } from './user.dto';
-import { User } from './user.entity';
+import { JwtAuthGuard } from '../auth/auth.guard';
+import { UpdateNameDto } from '../dtos/user.dto';
+import { User } from '../entities/user.entity';
 
 @Injectable()
+@UseGuards(JwtAuthGuard)
 export class UserService {
   @InjectRepository(User)
   private readonly repository: Repository<User>;

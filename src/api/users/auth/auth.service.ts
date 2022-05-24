@@ -7,7 +7,8 @@ import {
 } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Repository } from 'typeorm';
-import { User } from '../user.entity';
+import { User } from '../entities/user.entity';
+
 import { LoginDto, RegisterDto } from './auth.dto';
 import { AuthHelper } from './auth.helper';
 
@@ -28,7 +29,7 @@ export class AuthService {
       throw new HttpException('Conflict', HttpStatus.CONFLICT);
     }
 
-    user = new User();
+    user = new User({});
 
     user.name = name;
     user.email = email;
@@ -51,7 +52,7 @@ export class AuthService {
 
     const { password: pass, ...result } = user;
 
-    return { token, ...result };
+    return { token, user: { ...result } };
   }
 
   public async refresh(user: User): Promise<string> {
