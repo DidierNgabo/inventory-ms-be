@@ -17,7 +17,7 @@ import { UpdateNameDto } from '../dtos/user.dto';
 import { User } from '../entities/user.entity';
 import { UserService } from '../services/user.service';
 
-@Controller('api/users')
+@Controller('users')
 export class UserController {
   @Inject(UserService)
   private readonly service: UserService;

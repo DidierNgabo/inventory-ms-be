@@ -10,11 +10,11 @@ export class TypeOrmConfigService implements TypeOrmOptionsFactory {
   createTypeOrmOptions(): TypeOrmModuleOptions {
     return {
       type: 'postgres',
-      host: 'localhost',
-      port: 5432,
-      database: 'anik_hms_db',
-      username: 'postgres',
-      password: 'root',
+      host: process.env.DATABASE_HOST,
+      port: Number(process.env.DATABASE_PORT),
+      database: process.env.DATABASE_NAME,
+      username: process.env.DATABASE_USER,
+      password: process.env.DATABASE_PASSWORD,
       entities: ['dist/**/*.entity.{ts,js}'],
       migrations: ['dist/migrations/*.{ts,js}'],
       migrationsTableName: 'typeorm_migrations',

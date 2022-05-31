@@ -11,7 +11,7 @@ import { CreateProductDetailDto } from '../dto/create-product-detail.dto';
 import { UpDateProductDetailDto } from '../dto/update-product-detail.dto';
 import { ProductDetailService } from '../services/product-detail.service';
 
-@Controller('api/productdetails')
+@Controller('productdetails')
 export class ProductDetailController {
   constructor(private readonly service: ProductDetailService) {}
 

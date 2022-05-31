@@ -15,8 +15,8 @@ import { JwtStrategy } from './auth.strategy';
     JwtModule.registerAsync({
       inject: [ConfigService],
       useFactory: (config: ConfigService) => ({
-        secret: 'superSecret',
-        signOptions: { expiresIn: '3d' },
+        secret: process.env.JWT_KEY,
+        signOptions: { expiresIn: process.env.JWT_EXPIRES },
       }),
     }),
     TypeOrmModule.forFeature([User]),
