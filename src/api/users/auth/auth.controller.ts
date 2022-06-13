@@ -23,7 +23,7 @@ export class AuthController {
 
   @Post('register')
   @UseInterceptors(ClassSerializerInterceptor)
-  private register(@Body() body: RegisterDto): Promise<User | never> {
+  private register(@Body() body: RegisterDto): Promise<Object | never> {
     return this.service.register(body);
   }
 

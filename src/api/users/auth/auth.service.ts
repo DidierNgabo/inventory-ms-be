@@ -13,6 +13,7 @@ import { serialize } from 'cookie';
 import { LoginDto, RegisterDto } from './auth.dto';
 import { AuthHelper } from './auth.helper';
 import { response, Response } from 'express';
+import { MailService } from '@/mail/mail.service';
 
 @Injectable()
 export class AuthService {
@@ -22,7 +23,9 @@ export class AuthService {
   @Inject(AuthHelper)
   private readonly helper: AuthHelper;
 
-  public async register(body: RegisterDto): Promise<User | never> {
+  constructor(private mailService: MailService) {}
+
+  public async register(body: RegisterDto): Promise<Object | never> {
     const { name, email, password }: RegisterDto = body;
 
     let user: User = await this.repository.findOne({ where: { email } });
@@ -36,8 +39,9 @@ export class AuthService {
     user.name = name;
     user.email = email;
     user.password = this.helper.encodePassword(password);
+    const token = Math.floor(1000 + Math.random() * 9000).toString();
 
-    return this.repository.save(user);
+    return this.mailService.sendUserConfirmation(user, token);
   }
 
   public async login(body: LoginDto): Promise<object | never> {
