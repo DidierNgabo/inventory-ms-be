@@ -8,9 +8,11 @@ import {
 import { InjectRepository } from '@nestjs/typeorm';
 import { Repository } from 'typeorm';
 import { User } from '../entities/user.entity';
+import { serialize } from 'cookie';
 
 import { LoginDto, RegisterDto } from './auth.dto';
 import { AuthHelper } from './auth.helper';
+import { response, Response } from 'express';
 
 @Injectable()
 export class AuthService {
@@ -52,6 +54,15 @@ export class AuthService {
 
     const { password: pass, ...result } = user;
 
+    const serialized = serialize('authToken', token, {
+      httpOnly: true,
+      secure: true,
+      sameSite: 'strict',
+      maxAge: 60 * 60 * 24 * 5,
+      path: '/',
+    });
+    // response.setHeader('authToken', serialized);
+
     return { token, user: { ...result } };
   }
 
@@ -60,4 +71,6 @@ export class AuthService {
 
     return this.helper.generateToken(user);
   }
+
+  public async logout() {}
 }

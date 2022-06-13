@@ -1,13 +1,7 @@
 import { CreateCategoryDto } from '@/api/categories/dto/create-category.dto';
 import { Category } from '@/api/categories/entities/category.entity';
 import { Type } from 'class-transformer';
-import {
-  IsBoolean,
-  IsNotEmpty,
-  IsNotEmptyObject,
-  IsNumber,
-  ValidateNested,
-} from 'class-validator';
+import { IsBoolean, IsNotEmpty, IsNumber } from 'class-validator';
 
 export class CreateProductDto {
   @IsNotEmpty()
