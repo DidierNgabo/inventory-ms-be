@@ -3,9 +3,11 @@ import {
   Column,
   CreateDateColumn,
   Entity,
+  OneToMany,
   PrimaryGeneratedColumn,
   UpdateDateColumn,
 } from 'typeorm';
+import { QuotationDetails } from './quotation.details.entity';
 
 @Entity('quotations')
 export class Quotation {
@@ -19,4 +21,6 @@ export class Quotation {
   createdDate: Date;
   @UpdateDateColumn()
   updatedDate: Date;
+  @OneToMany(() => QuotationDetails, (detail) => detail.quotation)
+  quotation_details: QuotationDetails[];
 }

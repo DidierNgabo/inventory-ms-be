@@ -56,12 +56,8 @@ export class ProductDetailService {
   async update(id: string, dto: UpDateProductDetailDto): Promise<Object> {
     const detail = await this.findOne(id);
 
-    console.log(dto);
-
     if (dto?.price) detail.price = dto.price;
     if (dto?.color) detail.color = dto.color;
-
-    console.log(detail);
 
     const updatedProductDetail = await this.repository.save(detail);
 
