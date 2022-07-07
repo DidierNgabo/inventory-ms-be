@@ -7,10 +7,12 @@ import {
   Post,
   Put,
 } from '@nestjs/common';
+import { ApiTags } from '@nestjs/swagger';
 import { CreateQuotationDetailsDto } from '../dto/create-quotation.details.dto';
 import { UpdateQuotationDetailsDto } from '../dto/update-quotation.details.dto';
 import { QuotationDetailsService } from '../service/quotation-details.service';
 
+@ApiTags('quotation-details')
 @Controller('quotation-details')
 export class QuotationDetailsController {
   constructor(

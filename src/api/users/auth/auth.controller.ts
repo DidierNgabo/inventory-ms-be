@@ -10,12 +10,14 @@ import {
   UseGuards,
   UseInterceptors,
 } from '@nestjs/common';
+import { ApiBearerAuth, ApiTags } from '@nestjs/swagger';
 import { Request } from 'express';
 import { User } from '../entities/user.entity';
 import { LoginDto, RegisterDto } from './auth.dto';
 import { JwtAuthGuard } from './auth.guard';
 import { AuthService } from './auth.service';
 
+@ApiTags('authentication')
 @Controller('auth')
 export class AuthController {
   @Inject(AuthService)

@@ -4,7 +4,6 @@ import { Repository } from 'typeorm';
 import { CreateProductDetailDto } from '../dto/create-product-detail.dto';
 import { UpDateProductDetailDto } from '../dto/update-product-detail.dto';
 import { ProductDetail } from '../entities/product-detail.entity';
-import { Product } from '../entities/product.entity';
 import { ProductsService } from './products.service';
 
 @Injectable()
@@ -72,5 +71,15 @@ export class ProductDetailService {
     await this.repository.remove(productDetail);
 
     return { message: 'product Detail deleted successfuly' };
+  }
+
+  async findDetailsByProduct(id: string): Promise<ProductDetail[]> {
+    return this.repository.find({
+      where: {
+        product: {
+          id: id,
+        },
+      },
+    });
   }
 }

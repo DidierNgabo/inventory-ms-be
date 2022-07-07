@@ -11,12 +11,14 @@ import {
   UseGuards,
   UseInterceptors,
 } from '@nestjs/common';
+import { ApiTags } from '@nestjs/swagger';
 import { Request } from 'express';
 import { JwtAuthGuard } from '../auth/auth.guard';
 import { UpdateNameDto } from '../dtos/user.dto';
 import { User } from '../entities/user.entity';
 import { UserService } from '../services/user.service';
 
+@ApiTags('users')
 @Controller('users')
 export class UserController {
   @Inject(UserService)

@@ -9,9 +9,12 @@ import {
   Post,
   Put,
 } from '@nestjs/common';
+import { ApiBearerAuth, ApiTags } from '@nestjs/swagger';
 import { CreateRoleDto } from '../dtos/role.dto';
 import { RoleService } from '../services/role.service';
 
+@ApiBearerAuth()
+@ApiTags('roles')
 @Controller('roles')
 export class RoleController {
   @Inject(RoleService)

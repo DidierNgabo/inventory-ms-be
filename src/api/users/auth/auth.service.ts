@@ -12,7 +12,6 @@ import { serialize } from 'cookie';
 
 import { LoginDto, RegisterDto } from './auth.dto';
 import { AuthHelper } from './auth.helper';
-import { response, Response } from 'express';
 import { MailService } from '@/mail/mail.service';
 
 @Injectable()
@@ -52,20 +51,20 @@ export class AuthService {
       throw new HttpException('No user found', HttpStatus.NOT_FOUND);
     }
 
+    const isPasswordValid: boolean = this.helper.isPasswordValid(
+      password,
+      user.password,
+    );
+
+    if (!isPasswordValid) {
+      throw new HttpException('Invalid Credentials', HttpStatus.FORBIDDEN);
+    }
+
     this.repository.update(user.id, { lastLoginAt: new Date() });
 
     const token = this.helper.generateToken(user);
 
     const { password: pass, ...result } = user;
-
-    const serialized = serialize('authToken', token, {
-      httpOnly: true,
-      secure: true,
-      sameSite: 'strict',
-      maxAge: 60 * 60 * 24 * 5,
-      path: '/',
-    });
-    // response.setHeader('authToken', serialized);
 
     return { token, user: { ...result } };
   }

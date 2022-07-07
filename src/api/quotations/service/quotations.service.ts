@@ -11,13 +11,18 @@ export class QuotationsService {
   private readonly repository: Repository<Quotation>;
 
   async create(createQuotationDto: CreateQuotationDto): Promise<Object> {
+    console.log('working here');
+
     const newQuotation = { ...createQuotationDto };
-    const quotation = await this.repository.save(newQuotation);
+
+    const entity = Object.assign(new Quotation(), newQuotation);
+
+    const quotation = await this.repository.save(entity);
     return { message: 'Quotation Created Successfully', data: quotation };
   }
 
   findAll(): Promise<Quotation[]> {
-    return this.repository.find();
+    return this.repository.find({});
   }
 
   findOne(id: string): Promise<Quotation> {
@@ -43,5 +48,27 @@ export class QuotationsService {
     return {
       message: `quotation with the id ${quotation.id} deleted successfully`,
     };
+  }
+
+  async getLastRecord(): Promise<Quotation> {
+    return this.repository.findOne({
+      order: { createdDate: 'DESC' },
+    });
+  }
+
+  async generateQuotationNumber() {
+    const lastRecord = await this.getLastRecord();
+
+    let previousNumber: string | null;
+    if (lastRecord) {
+      previousNumber = lastRecord.quotationNumber;
+    }
+
+    if (previousNumber === null) {
+      return 'QUOTE_0001';
+    }
+    let pad = previousNumber.split('_')[1];
+    let increment = parseInt(pad) + 1;
+    return `QUOTE_${increment}`;
   }
 }

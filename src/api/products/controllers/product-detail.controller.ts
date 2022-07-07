@@ -7,10 +7,12 @@ import {
   Post,
   Put,
 } from '@nestjs/common';
+import { ApiTags } from '@nestjs/swagger';
 import { CreateProductDetailDto } from '../dto/create-product-detail.dto';
 import { UpDateProductDetailDto } from '../dto/update-product-detail.dto';
 import { ProductDetailService } from '../services/product-detail.service';
 
+@ApiTags('product-details')
 @Controller('productdetails')
 export class ProductDetailController {
   constructor(private readonly service: ProductDetailService) {}
@@ -28,6 +30,11 @@ export class ProductDetailController {
   @Get(':id')
   findOne(@Param('id') id: string) {
     return this.service.findOne(id);
+  }
+
+  @Get('/product/:productId')
+  findByProduct(@Param('productId') id: string) {
+    return this.service.findDetailsByProduct(id);
   }
 
   @Put(':id')

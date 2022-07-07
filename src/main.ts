@@ -2,12 +2,12 @@ import { RequestMethod, ValidationPipe } from '@nestjs/common';
 import { ConfigService } from '@nestjs/config';
 import { NestFactory } from '@nestjs/core';
 import { NestExpressApplication } from '@nestjs/platform-express';
+import { DocumentBuilder, SwaggerModule } from '@nestjs/swagger';
 import { AppModule } from './app.module';
 import { GlobalExceptionFilter } from './common/helper/GlobalExceptionFilter';
 
 async function bootstrap() {
   const app: NestExpressApplication = await NestFactory.create(AppModule);
-  const config: ConfigService = app.get(ConfigService);
   const port: number = Number(process.env.PORT) || 4000;
 
   app.enableCors();
@@ -20,6 +20,19 @@ async function bootstrap() {
   });
   app.useGlobalFilters(new GlobalExceptionFilter());
   app.useGlobalPipes(new ValidationPipe({ whitelist: true, transform: true }));
+
+  // swagger configuration
+
+  const config = new DocumentBuilder()
+    .setTitle('Anik hms')
+    .setDescription('Anik hms Api documentation')
+    .setVersion('1')
+    .addTag('anik')
+    .addBearerAuth()
+    .build();
+
+  const document = SwaggerModule.createDocument(app, config);
+  SwaggerModule.setup('api-doc', app, document);
 
   await app.listen(port, () => {
     console.log(process.env.PORT);
