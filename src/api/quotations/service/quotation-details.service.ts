@@ -1,6 +1,7 @@
 import { Injectable, NotFoundException } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Repository } from 'typeorm';
+import { CreateFullQuotationDto } from '../dto/create-fullQuotation.dto';
 import { CreateQuotationDetailsDto } from '../dto/create-quotation.details.dto';
 import { UpdateQuotationDetailsDto } from '../dto/update-quotation.details.dto';
 import { QuotationDetails } from '../entities/quotation.details.entity';
@@ -65,5 +66,31 @@ export class QuotationDetailsService {
     return {
       message: `quotation with the id ${quotationDetail.id} deleted successfully`,
     };
+  }
+
+  async createQuotationAndQuotationDetails(
+    dto: CreateFullQuotationDto,
+  ): Promise<Object> {
+    const quotation = {
+      status: dto.status,
+      customer: dto.customer,
+    };
+
+    let savedQuotation = await this.quotationService.create(quotation);
+
+    if (savedQuotation) {
+      dto.details.forEach((detail) => {
+        const quotationDetail = {
+          productName: detail.productName,
+          unityCost: detail.unityCost,
+          quantity: detail.quantity,
+          quotation: savedQuotation.id,
+        };
+
+        this.create(quotationDetail);
+      });
+    }
+
+    return { message: 'Quotation saved successfully' };
   }
 }

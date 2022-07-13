@@ -8,6 +8,7 @@ import {
   Put,
 } from '@nestjs/common';
 import { ApiTags } from '@nestjs/swagger';
+import { CreateFullQuotationDto } from '../dto/create-fullQuotation.dto';
 import { CreateQuotationDetailsDto } from '../dto/create-quotation.details.dto';
 import { UpdateQuotationDetailsDto } from '../dto/update-quotation.details.dto';
 import { QuotationDetailsService } from '../service/quotation-details.service';
@@ -22,6 +23,11 @@ export class QuotationDetailsController {
   @Post()
   create(@Body() createQuotationDto: CreateQuotationDetailsDto) {
     return this.quotationDetailsService.create(createQuotationDto);
+  }
+
+  @Post('full')
+  createFull(@Body() dto: CreateFullQuotationDto) {
+    return this.quotationDetailsService.createQuotationAndQuotationDetails(dto);
   }
 
   @Get()

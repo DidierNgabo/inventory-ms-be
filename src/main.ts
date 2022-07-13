@@ -18,7 +18,7 @@ async function bootstrap() {
       { path: '/auth/refresh', method: RequestMethod.POST },
     ],
   });
-  app.useGlobalFilters(new GlobalExceptionFilter());
+  //app.useGlobalFilters(new GlobalExceptionFilter());
   app.useGlobalPipes(new ValidationPipe({ whitelist: true, transform: true }));
 
   // swagger configuration
