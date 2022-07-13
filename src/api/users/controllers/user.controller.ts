@@ -1,3 +1,4 @@
+import { Public } from '@/common/helper/PublicDecorator';
 import {
   Body,
   ClassSerializerInterceptor,
@@ -24,6 +25,7 @@ export class UserController {
   @Inject(UserService)
   private readonly service: UserService;
 
+  @Public()
   @UseInterceptors(ClassSerializerInterceptor)
   @Get()
   public findAll() {

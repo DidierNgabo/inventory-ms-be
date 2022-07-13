@@ -5,19 +5,15 @@ import {
   UnauthorizedException,
 } from '@nestjs/common';
 import { JwtService } from '@nestjs/jwt';
-import { InjectRepository } from '@nestjs/typeorm';
-import { Repository } from 'typeorm';
 import { User } from '@/api/users/entities/user.entity';
 import * as bcrypt from 'bcryptjs';
+import { UserService } from '../services/user.service';
 
 @Injectable()
 export class AuthHelper {
-  @InjectRepository(User)
-  private readonly repository: Repository<User>;
-
   private readonly jwt: JwtService;
 
-  constructor(jwt: JwtService) {
+  constructor(jwt: JwtService, private readonly userService: UserService) {
     this.jwt = jwt;
   }
 
@@ -28,7 +24,8 @@ export class AuthHelper {
 
   // Get User by User ID we get from decode()
   public async validateUser(decoded: any): Promise<User> {
-    return this.repository.findOne(decoded.id);
+    const user = await this.userService.findOne(decoded.id);
+    return user;
   }
 
   // Generate JWT Token

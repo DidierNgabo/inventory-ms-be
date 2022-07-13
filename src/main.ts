@@ -8,7 +8,10 @@ import { GlobalExceptionFilter } from './common/helper/GlobalExceptionFilter';
 
 async function bootstrap() {
   const app: NestExpressApplication = await NestFactory.create(AppModule);
-  const port: number = Number(process.env.PORT) || 4000;
+
+  const config: ConfigService = app.get(ConfigService);
+  const port: number = config.get<number>('PORT');
+  //const port: number = Number(process.env.PORT) || 4000;
 
   app.enableCors();
   app.setGlobalPrefix('api', {
@@ -23,7 +26,7 @@ async function bootstrap() {
 
   // swagger configuration
 
-  const config = new DocumentBuilder()
+  const Swaggerconfig = new DocumentBuilder()
     .setTitle('Anik hms')
     .setDescription('Anik hms Api documentation')
     .setVersion('1')
@@ -31,7 +34,7 @@ async function bootstrap() {
     .addBearerAuth()
     .build();
 
-  const document = SwaggerModule.createDocument(app, config);
+  const document = SwaggerModule.createDocument(app, Swaggerconfig);
   SwaggerModule.setup('api-doc', app, document);
 
   await app.listen(port, () => {

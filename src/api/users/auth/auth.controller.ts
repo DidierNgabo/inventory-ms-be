@@ -1,3 +1,4 @@
+import { Public } from '@/common/helper/PublicDecorator';
 import {
   Body,
   ClassSerializerInterceptor,
@@ -23,12 +24,14 @@ export class AuthController {
   @Inject(AuthService)
   private readonly service: AuthService;
 
+  @Public()
   @Post('register')
   @UseInterceptors(ClassSerializerInterceptor)
   private register(@Body() body: RegisterDto): Promise<Object | never> {
     return this.service.register(body);
   }
 
+  @Public()
   @Post('login')
   @HttpCode(HttpStatus.OK)
   private login(@Body() body: LoginDto): Promise<object | never> {
