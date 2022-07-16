@@ -5,9 +5,9 @@ import {
   IsNotEmpty,
   ValidateNested,
 } from 'class-validator';
-import { UpdateQuotationDetailsDto } from './update-quotation.details.dto';
+import { UpdateOrderDetailDto } from './update-order-detail.dto';
 
-export class CreateFullQuotationDto {
+export class CreateFullOrderDto {
   @IsNotEmpty()
   status: string;
   @IsNotEmpty()
@@ -16,6 +16,6 @@ export class CreateFullQuotationDto {
   @IsArray()
   @ValidateNested({ each: true })
   @ArrayMinSize(1)
-  @Type(() => UpdateQuotationDetailsDto)
-  details: UpdateQuotationDetailsDto[];
+  @Type(() => UpdateOrderDetailDto)
+  details: UpdateOrderDetailDto[];
 }

@@ -1,3 +1,4 @@
+import { Public } from '@/common/helper/PublicDecorator';
 import {
   Body,
   Controller,
@@ -15,6 +16,7 @@ import { QuotationDetailsService } from '../service/quotation-details.service';
 
 @ApiTags('quotation-details')
 @Controller('quotation-details')
+@Public()
 export class QuotationDetailsController {
   constructor(
     private readonly quotationDetailsService: QuotationDetailsService,
@@ -46,6 +48,11 @@ export class QuotationDetailsController {
   @Get(':id')
   findOne(id: string) {
     return this.quotationDetailsService.findOne(id);
+  }
+
+  @Get('/quotation/:id')
+  findByQuotation(@Param('id') id: string) {
+    return this.quotationDetailsService.findByQuotation(id);
   }
 
   @Delete(':id')

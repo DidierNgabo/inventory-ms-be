@@ -22,6 +22,8 @@ export class QuotationDetails {
   createdDate: Date;
   @UpdateDateColumn()
   updatedDate: Date;
-  @ManyToOne(() => Quotation, (quotation) => quotation.id)
+  @ManyToOne(() => Quotation, (quotation) => quotation.id, {
+    onDelete: 'CASCADE',
+  })
   quotation: Quotation;
 }

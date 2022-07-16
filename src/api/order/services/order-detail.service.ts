@@ -2,6 +2,7 @@ import { Injectable, NotFoundException } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Repository } from 'typeorm';
 import { CreateOrderDetailDto } from '../dto/create-order-detail.dto';
+import { CreateFullOrderDto } from '../dto/full-order.dto';
 import { UpdateOrderDetailDto } from '../dto/update-order-detail.dto';
 import { OrderDetail } from '../entities/order-detail.entity';
 import { OrderService } from './order.service';
@@ -64,5 +65,44 @@ export class OrderDetailService {
     return {
       message: `order detrail with the id ${orderDetail.id} deleted successfully`,
     };
+  }
+
+  async createOrderAndOrderDetails(dto: CreateFullOrderDto): Promise<Object> {
+    const order = {
+      status: dto.status,
+      customer: dto.customer,
+    };
+
+    let savedorder = await this.orderService.create(order);
+
+    if (savedorder) {
+      dto.details.forEach((detail) => {
+        const orderDetail = {
+          productName: detail.productName,
+          price: detail.price,
+          discount: detail.discount,
+          order: savedorder.id,
+        };
+
+        this.create(orderDetail);
+      });
+    }
+
+    return { message: 'order saved successfully' };
+  }
+
+  async findByOrder(id: string): Promise<OrderDetail[]> {
+    //    const quotation = await this.quotationService.findOne(id);
+
+    return this.repo.find({
+      relations: {
+        order: true,
+      },
+      where: {
+        order: {
+          id,
+        },
+      },
+    });
   }
 }

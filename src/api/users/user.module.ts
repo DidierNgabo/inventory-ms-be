@@ -12,5 +12,6 @@ import { AuthModule } from './auth/auth.module';
   controllers: [UserController, RoleController],
   providers: [UserService, RoleService],
   imports: [AuthModule, TypeOrmModule.forFeature([User, Role])],
+  exports: [UserService],
 })
 export class UserModule {}

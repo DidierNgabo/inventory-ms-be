@@ -35,11 +35,30 @@ export class QuotationDetailsService {
   }
 
   async findAll(): Promise<QuotationDetails[]> {
-    return this.repository.find();
+    return this.repository.find({
+      relations: {
+        quotation: true,
+      },
+    });
   }
 
   findOne(id: string): Promise<QuotationDetails> {
     return this.repository.findOne({ where: { id } });
+  }
+
+  async findByQuotation(id: string): Promise<QuotationDetails[]> {
+    //    const quotation = await this.quotationService.findOne(id);
+
+    return this.repository.find({
+      relations: {
+        quotation: true,
+      },
+      where: {
+        quotation: {
+          id,
+        },
+      },
+    });
   }
 
   async update(id: string, dto: UpdateQuotationDetailsDto): Promise<Object> {

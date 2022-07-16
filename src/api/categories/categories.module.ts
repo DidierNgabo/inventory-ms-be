@@ -11,7 +11,6 @@ import { JwtAuthGuard } from '../users/auth/auth.guard';
   controllers: [CategoriesController],
   providers: [
     CategoriesService,
-    CategoriesService,
     { provide: APP_GUARD, useClass: JwtAuthGuard },
   ],
   imports: [TypeOrmModule.forFeature([Category]), AuthModule],

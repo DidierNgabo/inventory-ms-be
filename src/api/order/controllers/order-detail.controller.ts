@@ -1,3 +1,4 @@
+import { Public } from '@/common/helper/PublicDecorator';
 import {
   Body,
   Controller,
@@ -9,17 +10,24 @@ import {
 } from '@nestjs/common';
 import { ApiTags } from '@nestjs/swagger';
 import { CreateOrderDetailDto } from '../dto/create-order-detail.dto';
+import { CreateFullOrderDto } from '../dto/full-order.dto';
 import { UpdateOrderDetailDto } from '../dto/update-order-detail.dto';
 import { OrderDetailService } from '../services/order-detail.service';
 
 @ApiTags('order-details')
 @Controller('order-details')
+@Public()
 export class OrderDetailController {
   constructor(private readonly orderDetailService: OrderDetailService) {}
 
   @Get()
   findAll() {
     return this.orderDetailService.findAll();
+  }
+
+  @Post('full')
+  createFull(@Body() dto: CreateFullOrderDto) {
+    return this.orderDetailService.createOrderAndOrderDetails(dto);
   }
 
   @Post()
@@ -30,6 +38,11 @@ export class OrderDetailController {
   @Get(':id')
   findOne(@Param('id') id: string) {
     return this.orderDetailService.findOne(id);
+  }
+
+  @Get('/order/:id')
+  findByQuotation(@Param('id') id: string) {
+    return this.orderDetailService.findByOrder(id);
   }
 
   @Patch(':id')

@@ -1,3 +1,4 @@
+import { Public } from '@/common/helper/PublicDecorator';
 import {
   Controller,
   Get,
@@ -14,6 +15,7 @@ import { QuotationsService } from '../service/quotations.service';
 
 @ApiTags('quotations')
 @Controller('quotations')
+@Public()
 export class QuotationsController {
   constructor(private readonly quotationsService: QuotationsService) {}
 

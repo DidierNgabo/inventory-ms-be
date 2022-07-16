@@ -27,6 +27,8 @@ export class OrderDetail {
   @UpdateDateColumn()
   updatedDate: Date;
 
-  @ManyToOne(() => Order, (order) => order.id)
+  @ManyToOne(() => Order, (order) => order.id, {
+    onDelete: 'CASCADE',
+  })
   order: Order;
 }
