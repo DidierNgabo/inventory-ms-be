@@ -12,8 +12,12 @@ import { CreateTransactionDto } from './dto/create-transaction.dto';
 import { UpdateTransactionDto } from './dto/update-transaction.dto';
 import { AuthUser } from '@/common/helper/UserDecorator';
 import { User } from '../users/entities/user.entity';
+import { Public } from '@/common/helper/PublicDecorator';
+import { ApiTags } from '@nestjs/swagger';
 
+@ApiTags('transactions')
 @Controller('transactions')
+@Public()
 export class TransactionController {
   constructor(private readonly transactionService: TransactionService) {}
 
@@ -28,6 +32,11 @@ export class TransactionController {
   @Get()
   findAll() {
     return this.transactionService.findAll();
+  }
+
+  @Get('count')
+  countAll() {
+    return this.transactionService.countAll();
   }
 
   @Get(':id')

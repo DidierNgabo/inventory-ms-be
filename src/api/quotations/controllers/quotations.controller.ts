@@ -29,6 +29,11 @@ export class QuotationsController {
     return this.quotationsService.findAll();
   }
 
+  @Get('count')
+  countAll() {
+    return this.quotationsService.countAll();
+  }
+
   @Get(':id')
   findOne(@Param('id') id: string) {
     return this.quotationsService.findOne(id);

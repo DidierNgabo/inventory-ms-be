@@ -7,6 +7,7 @@ import {
   CreateDateColumn,
   Entity,
   JoinColumn,
+  ManyToOne,
   OneToOne,
   PrimaryGeneratedColumn,
   UpdateDateColumn,
@@ -23,7 +24,7 @@ export class Transaction extends BaseEntity {
   @Column({ type: 'varchar', nullable: false })
   type: string;
 
-  @OneToOne(() => Product, (product) => product.id)
+  @ManyToOne(() => Product, (product) => product.transactions)
   @JoinColumn()
   product: Product;
 
@@ -35,14 +36,14 @@ export class Transaction extends BaseEntity {
   @UpdateDateColumn()
   updatedDate: Date;
 
-  @OneToOne(() => User, (user) => user.name)
+  @ManyToOne(() => User, (user) => user.id)
   @JoinColumn()
   createdby: User;
 
   @BeforeInsert()
   async generateQuotationNumber() {
     const lastRecord = await Transaction.find({
-      order: { createdDate: 'DESC' },
+      order: { transactionNo: 'DESC' },
       take: 1,
     });
     let previousNumber: string | null = null;

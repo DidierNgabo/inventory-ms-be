@@ -78,4 +78,8 @@ export class ProductsService {
       message: `product with the name of '${product.name}' deleted successfully`,
     };
   }
+
+  async countAll(): Promise<number> {
+    return this.repository.count();
+  }
 }

@@ -12,9 +12,11 @@ import { ProductsService } from '../services/products.service';
 import { CreateProductDto } from '../dto/create-product.dto';
 import { UpdateProductDto } from '../dto/update-product.dto';
 import { ApiTags } from '@nestjs/swagger';
+import { Public } from '@/common/helper/PublicDecorator';
 
 @ApiTags('products')
 @Controller('products')
+@Public()
 export class ProductsController {
   constructor(private readonly productsService: ProductsService) {}
 
@@ -26,6 +28,11 @@ export class ProductsController {
   @Get()
   findAll() {
     return this.productsService.findAll();
+  }
+
+  @Get('count')
+  countAll() {
+    return this.productsService.countAll();
   }
 
   @Get(':id')

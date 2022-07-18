@@ -22,17 +22,12 @@ export class TransactionService {
     private readonly productService: ProductsService,
   ) {}
 
-  async create(
-    createTransactionDto: CreateTransactionDto,
-    user: User,
-  ): Promise<Transaction> {
-    const product = await this.productService.findOne(
-      createTransactionDto.product,
-    );
+  async create(dto: CreateTransactionDto, user: User): Promise<Transaction> {
+    const product = await this.productService.findOne(dto.product);
 
     const transaction = new Transaction();
-    transaction.quantity = createTransactionDto.quantity;
-    transaction.type = createTransactionDto.type;
+    transaction.quantity = dto.quantity;
+    transaction.type = dto.type;
     transaction.product = product;
     transaction.createdby = user;
 
@@ -51,7 +46,11 @@ export class TransactionService {
   }
 
   findAll() {
-    return this.repo.find();
+    return this.repo.find({
+      relations: {
+        product: true,
+      },
+    });
   }
 
   async findOne(id: string): Promise<Transaction> {
@@ -105,6 +104,10 @@ export class TransactionService {
 
     await this.repo.remove(transaction);
 
-    return `Deleted successfully #${id} transaction`;
+    return { message: `Deleted successfully #${id} transaction` };
+  }
+
+  async countAll(): Promise<number> {
+    return this.repo.count();
   }
 }

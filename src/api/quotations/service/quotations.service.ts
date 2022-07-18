@@ -53,4 +53,8 @@ export class QuotationsService {
       order: { createdDate: 'DESC' },
     });
   }
+
+  async countAll(): Promise<number> {
+    return this.repository.count();
+  }
 }

@@ -1,4 +1,5 @@
 import { Category } from '@/api/categories/entities/category.entity';
+import { Transaction } from '@/api/transaction/entities/transaction.entity';
 import {
   Column,
   CreateDateColumn,
@@ -40,6 +41,8 @@ export class Product {
 
   @OneToMany(() => ProductDetail, (productDetail) => productDetail.product)
   details: ProductDetail[];
+  @OneToMany(() => Transaction, (transaction) => transaction.product)
+  transactions: Transaction[];
 
   @CreateDateColumn()
   createdAt: Date;
