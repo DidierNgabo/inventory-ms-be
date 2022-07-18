@@ -5,6 +5,7 @@ import { QuotationModule } from './quotations/quotations.module';
 import { OrderModule } from './order/order.module';
 import { TransactionModule } from './transaction/transaction.module';
 import { ProductsModule } from './products/products.module';
+import { OnlineRequestsModule } from './online-requests/online-requests.module';
 
 @Module({
   imports: [
@@ -14,6 +15,7 @@ import { ProductsModule } from './products/products.module';
     ProductsModule,
     OrderModule,
     TransactionModule,
+    OnlineRequestsModule,
   ],
 })
 export class ApiModule {}

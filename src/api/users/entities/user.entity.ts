@@ -1,3 +1,4 @@
+import { OnlineRequest } from '@/api/online-requests/entities/online-request.entity';
 import { Exclude } from 'class-transformer';
 import {
   BaseEntity,
@@ -5,6 +6,7 @@ import {
   CreateDateColumn,
   Entity,
   ManyToOne,
+  OneToMany,
   PrimaryGeneratedColumn,
   UpdateDateColumn,
 } from 'typeorm';
@@ -39,6 +41,9 @@ export class User {
 
   @ManyToOne(() => Role, (role) => role.id)
   role: Role;
+
+  @OneToMany(() => OnlineRequest, (request) => request.id)
+  requests: OnlineRequest[];
 
   constructor(partial: Partial<User>) {
     Object.assign(this, partial);

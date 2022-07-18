@@ -65,13 +65,7 @@ export class TransactionService {
 
   async update(id: string, dto: UpdateTransactionDto) {
     const toUpdated = await this.findOne(id);
-
-    console.log(toUpdated);
-
     const updated = Object.assign(toUpdated, dto);
-
-    console.log(updated);
-
     if (
       updated.type === 'stock out' &&
       updated.quantity > updated.product.amountInStock
