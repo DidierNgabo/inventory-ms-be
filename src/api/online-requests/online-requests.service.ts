@@ -24,7 +24,11 @@ export class OnlineRequestsService {
   }
 
   findAll(): Promise<OnlineRequest[]> {
-    return this.repo.find();
+    return this.repo.find({
+      relations: {
+        customer: true,
+      },
+    });
   }
 
   findOne(id: string): Promise<OnlineRequest> {
