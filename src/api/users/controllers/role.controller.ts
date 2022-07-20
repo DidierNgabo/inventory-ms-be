@@ -10,7 +10,7 @@ import {
   Put,
 } from '@nestjs/common';
 import { ApiBearerAuth, ApiTags } from '@nestjs/swagger';
-import { CreateRoleDto } from '../dtos/role.dto';
+import { CreateRoleDto, UpdateRoleDto } from '../dtos/role.dto';
 import { RoleService } from '../services/role.service';
 
 @ApiBearerAuth()
@@ -43,7 +43,7 @@ export class RoleController {
   @Put(':id')
   public async update(
     @Param('id', ParseIntPipe) id: number,
-    @Body() dto: CreateRoleDto,
+    @Body() dto: UpdateRoleDto,
   ) {
     return this.roleService.update(id, dto);
   }

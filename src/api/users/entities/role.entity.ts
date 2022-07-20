@@ -15,6 +15,9 @@ export class Role {
   @Column({ type: 'varchar' })
   name: string;
 
+  @Column({ type: 'varchar', nullable: true })
+  description: string;
+
   @ManyToMany(() => Permission)
   @JoinTable({ name: 'role_permissions' })
   permissions: Permission[];

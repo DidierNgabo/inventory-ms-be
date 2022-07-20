@@ -6,6 +6,7 @@ import { OrderModule } from './order/order.module';
 import { TransactionModule } from './transaction/transaction.module';
 import { ProductsModule } from './products/products.module';
 import { OnlineRequestsModule } from './online-requests/online-requests.module';
+import { InspectionModule } from './inspection/inspection.module';
 
 @Module({
   imports: [
@@ -16,6 +17,7 @@ import { OnlineRequestsModule } from './online-requests/online-requests.module';
     OrderModule,
     TransactionModule,
     OnlineRequestsModule,
+    InspectionModule,
   ],
 })
 export class ApiModule {}

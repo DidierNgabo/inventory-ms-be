@@ -1,3 +1,4 @@
+import { Inspection } from '@/api/inspection/entities/inspection.entity';
 import { OnlineRequest } from '@/api/online-requests/entities/online-request.entity';
 import { Exclude } from 'class-transformer';
 import {
@@ -44,6 +45,9 @@ export class User {
 
   @OneToMany(() => OnlineRequest, (request) => request.id)
   requests: OnlineRequest[];
+
+  @OneToMany(() => Inspection, (inspection) => inspection.id)
+  inspections: Inspection[];
 
   constructor(partial: Partial<User>) {
     Object.assign(this, partial);
