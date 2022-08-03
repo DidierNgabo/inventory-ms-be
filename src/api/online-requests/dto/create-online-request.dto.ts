@@ -1,4 +1,5 @@
-import { IsNotEmpty, IsString } from 'class-validator';
+import { IsNotEmpty, IsNumber, IsOptional, IsString } from 'class-validator';
+import { Address } from '../entities/address.interface';
 
 export class CreateOnlineRequestDto {
   @IsString()
@@ -10,4 +11,11 @@ export class CreateOnlineRequestDto {
   @IsString()
   @IsNotEmpty()
   status: string;
+
+  @IsNotEmpty()
+  address: Address;
+
+  @IsOptional()
+  @IsNumber()
+  assignedTo: number;
 }

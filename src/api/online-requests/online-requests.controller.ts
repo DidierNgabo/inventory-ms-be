@@ -28,13 +28,18 @@ export class OnlineRequestsController {
   }
 
   @Get()
-  findAll() {
-    return this.onlineRequestsService.findAll();
+  findAll(@AuthUser() user: User) {
+    return this.onlineRequestsService.findAll(user);
   }
 
   @Get(':id')
   findOne(@Param('id') id: string) {
     return this.onlineRequestsService.findOne(id);
+  }
+
+  @Patch('/assign/:id')
+  assignTech(@Param('id') id: string, @Body() dto: UpdateOnlineRequestDto) {
+    return this.onlineRequestsService.assignTech(dto, id);
   }
 
   @Patch(':id')

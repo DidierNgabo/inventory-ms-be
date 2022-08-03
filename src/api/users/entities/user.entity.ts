@@ -1,8 +1,8 @@
 import { Inspection } from '@/api/inspection/entities/inspection.entity';
 import { OnlineRequest } from '@/api/online-requests/entities/online-request.entity';
+import { Role } from '@/api/roles/entities/role.entity';
 import { Exclude } from 'class-transformer';
 import {
-  BaseEntity,
   Column,
   CreateDateColumn,
   Entity,
@@ -11,19 +11,18 @@ import {
   PrimaryGeneratedColumn,
   UpdateDateColumn,
 } from 'typeorm';
-import { Role } from './role.entity';
 
-@Entity()
+@Entity('users')
 export class User {
   @PrimaryGeneratedColumn()
-  id!: number;
+  id: number;
 
   @Column({ type: 'varchar' })
-  email!: string;
+  email: string;
 
   @Exclude()
   @Column({ type: 'varchar' })
-  password!: string;
+  password: string;
 
   @Column({ type: 'varchar', nullable: true })
   public name: string | null;
@@ -40,11 +39,13 @@ export class User {
   @Column({ type: 'timestamp', nullable: true, default: null })
   public lastLoginAt: Date | null;
 
-  @ManyToOne(() => Role, (role) => role.id)
+  @ManyToOne(() => Role, (role) => role.users)
   role: Role;
 
-  @OneToMany(() => OnlineRequest, (request) => request.id)
+  @OneToMany(() => OnlineRequest, (request) => request.customer)
   requests: OnlineRequest[];
+  @OneToMany(() => OnlineRequest, (request) => request.assignedTo)
+  assignedRequests: OnlineRequest[];
 
   @OneToMany(() => Inspection, (inspection) => inspection.id)
   inspections: Inspection[];

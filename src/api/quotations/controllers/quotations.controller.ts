@@ -7,8 +7,10 @@ import {
   Param,
   Delete,
   Put,
+  Res,
 } from '@nestjs/common';
 import { ApiTags } from '@nestjs/swagger';
+import { Response } from 'express';
 import { CreateQuotationDto } from '../dto/create-quotation.dto';
 import { UpdateQuotationDto } from '../dto/update-quotation.dto';
 import { QuotationsService } from '../service/quotations.service';
@@ -29,9 +31,27 @@ export class QuotationsController {
     return this.quotationsService.findAll();
   }
 
+  @Get('status/count')
+  countByStatus() {
+    return this.quotationsService.countByStatus();
+  }
+
   @Get('count')
   countAll() {
     return this.quotationsService.countAll();
+  }
+
+  @Get('/pdf')
+  async getPDF(@Res() res: Response): Promise<void> {
+    const buffer = await this.quotationsService.generatePDF();
+
+    res.set({
+      'Content-Type': 'application/pdf',
+      'Content-Disposition': 'inline; filename=example.pdf',
+      'Content-Length': buffer.length,
+    });
+
+    res.end(buffer);
   }
 
   @Get(':id')

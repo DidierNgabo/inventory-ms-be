@@ -20,7 +20,11 @@ export class InspectionService {
   }
 
   findAll(): Promise<Inspection[]> {
-    return this.repo.find();
+    return this.repo.find({
+      relations: {
+        doneBy: true,
+      },
+    });
   }
 
   findOne(id: string): Promise<Inspection> {

@@ -1,3 +1,5 @@
+import { RolesModule } from '@/api/roles/roles.module';
+import { RoleService } from '@/api/roles/roles.service';
 import { MailModule } from '@/mail/mail.module';
 import { Module } from '@nestjs/common';
 import { ConfigService } from '@nestjs/config';
@@ -14,6 +16,7 @@ import { JwtStrategy } from './auth.strategy';
 @Module({
   imports: [
     MailModule,
+    RolesModule,
     PassportModule.register({ defaultStrategy: 'jwt', property: 'user' }),
     JwtModule.registerAsync({
       inject: [ConfigService],
@@ -25,7 +28,7 @@ import { JwtStrategy } from './auth.strategy';
     TypeOrmModule.forFeature([User]),
   ],
   controllers: [AuthController],
-  providers: [AuthService, AuthHelper, UserService, JwtStrategy],
+  providers: [AuthService, AuthHelper, UserService, JwtStrategy, RoleService],
   exports: [AuthService],
 })
 export class AuthModule {}

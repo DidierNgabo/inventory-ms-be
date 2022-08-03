@@ -10,8 +10,8 @@ import {
   Put,
 } from '@nestjs/common';
 import { ApiBearerAuth, ApiTags } from '@nestjs/swagger';
-import { CreateRoleDto, UpdateRoleDto } from '../dtos/role.dto';
-import { RoleService } from '../services/role.service';
+import { CreateRoleDto, UpdateRoleDto } from './dto/create-role.dto';
+import { RoleService } from './roles.service';
 
 @ApiBearerAuth()
 @ApiTags('roles')

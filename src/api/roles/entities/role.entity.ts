@@ -1,11 +1,13 @@
+import { Permission } from '@/api/users/entities/permission.entity';
+import { User } from '@/api/users/entities/user.entity';
 import {
   Column,
   Entity,
   JoinTable,
   ManyToMany,
+  OneToMany,
   PrimaryGeneratedColumn,
 } from 'typeorm';
-import { Permission } from './permission.entity';
 
 @Entity('roles')
 export class Role {
@@ -17,6 +19,9 @@ export class Role {
 
   @Column({ type: 'varchar', nullable: true })
   description: string;
+
+  @OneToMany(() => User, (user) => user.role)
+  users: User[];
 
   @ManyToMany(() => Permission)
   @JoinTable({ name: 'role_permissions' })

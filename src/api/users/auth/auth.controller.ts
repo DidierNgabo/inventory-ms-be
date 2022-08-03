@@ -6,6 +6,7 @@ import {
   HttpCode,
   HttpStatus,
   Inject,
+  Param,
   Post,
   Req,
   UseGuards,
@@ -14,7 +15,7 @@ import {
 import { ApiBearerAuth, ApiTags } from '@nestjs/swagger';
 import { Request } from 'express';
 import { User } from '../entities/user.entity';
-import { LoginDto, RegisterDto } from './auth.dto';
+import { LoginDto, RegisterDto, ResetDto } from './auth.dto';
 import { JwtAuthGuard } from './auth.guard';
 import { AuthService } from './auth.service';
 
@@ -36,6 +37,16 @@ export class AuthController {
   @HttpCode(HttpStatus.OK)
   private login(@Body() body: LoginDto): Promise<object | never> {
     return this.service.login(body);
+  }
+
+  @Public()
+  @Post('reset/:id')
+  @HttpCode(HttpStatus.OK)
+  private reset(
+    @Param('id') id: string,
+    @Body() dto: ResetDto,
+  ): Promise<Object | never> {
+    return this.service.resetPassword(+id, dto);
   }
 
   @Post('refresh')

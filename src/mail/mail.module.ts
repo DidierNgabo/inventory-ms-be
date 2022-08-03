@@ -19,10 +19,10 @@ import { MailService } from './mail.service';
           },
         },
         defaults: {
-          from: `No reply <${config.get('MAIL_FROM')}>`,
+          from: `"No Reply" <${config.get('MAIL_FROM')}>`,
         },
         template: {
-          dir: join(__dirname, 'templates'),
+          dir: join(__dirname, './templates'),
           adapter: new HandlebarsAdapter(),
           options: {
             strict: true,

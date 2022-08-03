@@ -1,7 +1,6 @@
-import { IsOptional, IsString } from 'class-validator';
+import { PartialType } from '@nestjs/swagger';
+import { RegisterDto } from '../auth/auth.dto';
 
-export class UpdateNameDto {
-  @IsString()
-  @IsOptional()
-  public readonly name?: string;
-}
+export class UpdateUserDto extends PartialType(RegisterDto) {}
+
+

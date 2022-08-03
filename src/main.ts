@@ -19,6 +19,7 @@ async function bootstrap() {
       { path: '/auth/register', method: RequestMethod.POST },
       { path: '/auth/login', method: RequestMethod.POST },
       { path: '/auth/refresh', method: RequestMethod.POST },
+      { path: '/auth/reset/:id', method: RequestMethod.POST },
     ],
   });
   //app.useGlobalFilters(new GlobalExceptionFilter());

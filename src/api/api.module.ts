@@ -7,6 +7,7 @@ import { TransactionModule } from './transaction/transaction.module';
 import { ProductsModule } from './products/products.module';
 import { OnlineRequestsModule } from './online-requests/online-requests.module';
 import { InspectionModule } from './inspection/inspection.module';
+import { RolesModule } from './roles/roles.module';
 
 @Module({
   imports: [
@@ -18,6 +19,7 @@ import { InspectionModule } from './inspection/inspection.module';
     TransactionModule,
     OnlineRequestsModule,
     InspectionModule,
+    RolesModule,
   ],
 })
 export class ApiModule {}

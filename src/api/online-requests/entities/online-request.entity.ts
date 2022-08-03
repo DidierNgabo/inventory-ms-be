@@ -10,6 +10,7 @@ import {
   PrimaryGeneratedColumn,
   UpdateDateColumn,
 } from 'typeorm';
+import { Address } from './address.interface';
 
 @Entity('online_requests')
 export class OnlineRequest extends BaseEntity {
@@ -30,6 +31,14 @@ export class OnlineRequest extends BaseEntity {
   @ManyToOne(() => User, (customer) => customer.requests)
   @JoinColumn()
   customer: User;
+
+  @Column({ type: 'jsonb', nullable: true })
+  address: Address;
+
+  @ManyToOne(() => User, (tech) => tech.assignedRequests)
+  @JoinColumn()
+  assignedTo: User;
+
   @CreateDateColumn()
   createdDate: Date;
   @UpdateDateColumn()

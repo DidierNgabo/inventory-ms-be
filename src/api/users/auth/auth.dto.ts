@@ -1,7 +1,7 @@
 import { Trim } from 'class-sanitizer';
 import {
   IsEmail,
-  isEmail,
+  IsNotEmpty,
   IsOptional,
   IsString,
   MinLength,
@@ -19,6 +19,10 @@ export class RegisterDto {
   @IsString()
   @IsOptional()
   public readonly name?: string;
+
+  @IsString()
+  @IsNotEmpty()
+  public role: number;
 }
 
 export class LoginDto {
@@ -28,4 +32,13 @@ export class LoginDto {
 
   @IsString()
   public readonly password: string;
+}
+
+export class ResetDto {
+  @IsString()
+  @IsNotEmpty()
+  public readonly oldPassword: string;
+  @IsString()
+  @IsNotEmpty()
+  public readonly newPassword: string;
 }
