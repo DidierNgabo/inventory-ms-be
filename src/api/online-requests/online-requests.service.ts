@@ -6,6 +6,7 @@ import { UserService } from '../users/services/user.service';
 import { CreateOnlineRequestDto } from './dto/create-online-request.dto';
 import { UpdateOnlineRequestDto } from './dto/update-online-request.dto';
 import { OnlineRequest } from './entities/online-request.entity';
+import PDFDocument from 'pdfkit-table';
 
 @Injectable()
 export class OnlineRequestsService {
@@ -89,5 +90,71 @@ export class OnlineRequestsService {
     const request = await this.repo.findOne(options);
     if (!request) throw new NotFoundException('Request not found');
     else return request;
+  }
+
+  async generatePDF(user: User): Promise<Buffer> {
+    const data: any = await this.findAll(user);
+    const pdfBuffer: Buffer = await new Promise((resolve) => {
+      const doc = new PDFDocument({
+        margin: 30,
+        size: 'A4',
+      });
+
+      (async function () {
+        // table
+        const table = {
+          title: 'Online Requests',
+          subtitle: 'List of online requests Saved',
+          headers: [
+            {
+              label: '#',
+              property: '#',
+              width: 50,
+              renderer: function (value, i, irow) {
+                return `${1 + irow}`;
+              },
+            },
+            {
+              label: 'Req No',
+              width: 50,
+              property: 'reqNo',
+              renderer: null,
+            },
+            {
+              label: 'Service',
+              property: 'service',
+              width: 100,
+              renderer: null,
+            },
+            {
+              label: 'Description',
+              width: 150,
+              property: 'description',
+              renderer: null,
+            },
+            {
+              label: 'Customer',
+              width: 150,
+              property: 'customer',
+              renderer: (value: User, i, irow) => `${value.name}`,
+            },
+          ],
+          datas: data,
+        };
+        await doc.table(table, {
+          width: 500,
+        });
+        doc.end();
+      })();
+
+      const buffer = [];
+      doc.on('data', buffer.push.bind(buffer));
+      doc.on('end', () => {
+        const data = Buffer.concat(buffer);
+        resolve(data);
+      });
+    });
+
+    return pdfBuffer;
   }
 }

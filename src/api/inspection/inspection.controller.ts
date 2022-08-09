@@ -6,12 +6,14 @@ import {
   Patch,
   Param,
   Delete,
+  Res,
 } from '@nestjs/common';
 import { InspectionService } from './inspection.service';
 import { CreateInspectionDto } from './dto/create-inspection.dto';
 import { UpdateInspectionDto } from './dto/update-inspection.dto';
 import { AuthUser } from '@/common/helper/UserDecorator';
 import { User } from '../users/entities/user.entity';
+import { Response } from 'express';
 
 @Controller('inspections')
 export class InspectionController {
@@ -28,6 +30,19 @@ export class InspectionController {
   @Get()
   findAll() {
     return this.inspectionService.findAll();
+  }
+
+  @Get('/pdf')
+  async getPDF(@Res() res: Response): Promise<void> {
+    const buffer = await this.inspectionService.generatePDF();
+
+    res.set({
+      'Content-Type': 'application/pdf',
+      'Content-Disposition': 'inline; filename=example.pdf',
+      'Content-Length': buffer.length,
+    });
+
+    res.end(buffer);
   }
 
   @Get(':id')

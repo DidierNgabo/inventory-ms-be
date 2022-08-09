@@ -25,7 +25,10 @@ export class QuotationsService {
   }
 
   findOne(id: string): Promise<Quotation> {
-    return this.repository.findOne({ where: { id } });
+    return this.repository.findOne({
+      where: { id },
+      relations: { quotation_details: true },
+    });
   }
 
   async update(
@@ -88,46 +91,148 @@ export class QuotationsService {
         // table
         const table = {
           title: 'Quotations',
-          subtitle: 'Subtitle',
+          subtitle: 'List of quotations saved',
           headers: [
             {
+              label: '#',
+              property: '#',
+              width: 50,
+              renderer: function (value, i, irow) {
+                return `${1 + irow}`;
+              },
+            },
+            {
               label: 'No',
+              width: 100,
               property: 'quotationNumber',
-              width: 60,
               renderer: null,
             },
             {
               label: 'Customer',
               property: 'customer',
-              width: 150,
+              width: 200,
               renderer: null,
             },
-            { label: 'Status', property: 'status', width: 100, renderer: null },
+            { label: 'Status', width: 150, property: 'status', renderer: null },
+          ],
+          datas: data,
+        };
+        await doc.table(table, {
+          width: 500,
+        });
+        doc.end();
+      })();
+
+      const buffer = [];
+      doc.on('data', buffer.push.bind(buffer));
+      doc.on('end', () => {
+        const data = Buffer.concat(buffer);
+        resolve(data);
+      });
+    });
+
+    return pdfBuffer;
+  }
+
+  async generatePdfForSingle(id: string): Promise<Buffer> {
+    const quotation = await this.findOne(id);
+
+    const data: any = quotation.quotation_details.map(
+      ({ createdDate, updatedDate, id, quotation, ...detail }) => {
+        return { ...detail, total: detail.quantity * detail.unityCost };
+      },
+    );
+
+    const pdfBuffer: Buffer = await new Promise((resolve) => {
+      const doc = new PDFDocument({
+        size: 'A4',
+        bufferPages: true,
+      });
+
+      // customize your PDF document
+      doc.font('Times-Roman');
+      doc.fillColor('#2291FF').fontSize(20).text('Services Quotation', 50, 50);
+      doc
+        .fillColor('#2291FF')
+        .font('Times-Bold')
+        .fontSize(18)
+        .text('Anik Rwanda', 0, 50, {
+          align: 'right',
+        });
+
+      doc
+        .fillColor('#232323')
+        .font('Times-Bold')
+        .fontSize(12)
+        .text(`Quotation No:${quotation.quotationNumber}`, 0, 100, {
+          align: 'right',
+        });
+      doc
+        .fillColor('#232323')
+        .font('Times-Bold')
+        .fontSize(12)
+        .text(`Date:${quotation.createdDate.toLocaleDateString()}`, {
+          align: 'right',
+        });
+      // let table = { width: 180, fontSize: 10, font: 'Courier', rows: [{ height: 10,  color: '#FFFFFF', fillColor: "#0D345A", columns: [{ text: "N°", textOptions: { "fill": "#FFFFFF"  tried "color"/"textColor"/"fillColor": "#FFFFFF" but nothing worked }, width: 20 }, { text: "Description", textOptions: { "fill": "#FFFFFF" }, width: 40 }, { text: "Qté", textOptions: { "fill": "#FFFFFF" }, width: 20 }, { text: "Unité", textOptions: { "fill": "#FFFFFF" }, width: 20 }, { text: "Prix", textOptions: { "fill": "#FFFFFF" }, width: 20 }, { text: "Rabais", textOptions: { "fill": "#FFFFFF" }, width: 20 }, { text: "TVA", textOptions: { "fill": "#FFFFFF" }, width: 20 }, { text: "Total", textOptions: { "fill": "#FFFFFF" }, width: 25 }] }] };
+      //doc.table(table);
+
+      (async function () {
+        // table
+        const table = {
+          headers: [
             {
-              label: 'Date',
-              property: 'createdDate',
+              label: 'Product',
+              property: 'productName',
+              width: 200,
+              renderer: null,
+            },
+            {
+              label: 'Quantity',
+              property: 'quantity',
+              width: 100,
+              renderer: null,
+            },
+            {
+              label: 'Unit Price',
+              property: 'unityCost',
+              width: 100,
+              renderer: null,
+            },
+            {
+              label: 'Total',
+              property: 'total',
               width: 100,
               renderer: null,
             },
           ],
           datas: data,
         };
-        // A4 595.28 x 841.89 (portrait) (about width sizes)
-        // width
         await doc.table(table, {
-          width: 300,
+          width: 500,
+          y: 200,
         });
-        // or columnsSize
-        // await doc.table(table, {
-        //   columnsSize: [200, 100, 100],
-        // });
-        // done!
-        doc.end();
       })();
 
-      // // customize your PDF document
-      // doc.text('hello world', 100, 50);
-      // doc.end();
+      (async function () {
+        // table
+        const Totaltable = {
+          headers: ['Title', 'price'],
+          rows: [
+            ['SubTotal', '34000'],
+            ['Vat', '18%'],
+            ['Total', '45000'],
+          ],
+        };
+        // A4 595.28 x 841.89 (portrait) (about width sizes)
+        // width
+        await doc.table(Totaltable, {
+          width: 300,
+          hideHeader: true,
+        });
+      })();
+
+      doc.end();
 
       const buffer = [];
       doc.on('data', buffer.push.bind(buffer));

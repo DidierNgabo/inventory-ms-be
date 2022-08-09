@@ -11,6 +11,7 @@ import { User } from '../users/entities/user.entity';
 import { CreateTransactionDto } from './dto/create-transaction.dto';
 import { UpdateTransactionDto } from './dto/update-transaction.dto';
 import { Transaction } from './entities/transaction.entity';
+import PDFDocument from 'pdfkit-table';
 
 @Injectable()
 export class TransactionService {
@@ -103,5 +104,71 @@ export class TransactionService {
 
   async countAll(): Promise<number> {
     return this.repo.count();
+  }
+
+  async generatePDF(): Promise<Buffer> {
+    const data: any = await this.findAll();
+    const pdfBuffer: Buffer = await new Promise((resolve) => {
+      const doc = new PDFDocument({
+        margin: 30,
+        size: 'A4',
+      });
+
+      (async function () {
+        // table
+        const table = {
+          title: 'Transactions',
+          subtitle: 'List of transactions Saved',
+          headers: [
+            {
+              label: '#',
+              property: '#',
+              width: 50,
+              renderer: function (value, i, irow) {
+                return `${1 + irow}`;
+              },
+            },
+            {
+              label: 'No',
+              width: 50,
+              property: 'transactionNo',
+              renderer: null,
+            },
+            {
+              label: 'Type',
+              property: 'type',
+              width: 100,
+              renderer: null,
+            },
+            {
+              label: 'Quantity',
+              width: 150,
+              property: 'quantity',
+              renderer: (value, i, irow) => `${value}`,
+            },
+            {
+              label: 'Product',
+              width: 150,
+              property: 'product',
+              renderer: null,
+            },
+          ],
+          datas: data,
+        };
+        await doc.table(table, {
+          width: 500,
+        });
+        doc.end();
+      })();
+
+      const buffer = [];
+      doc.on('data', buffer.push.bind(buffer));
+      doc.on('end', () => {
+        const data = Buffer.concat(buffer);
+        resolve(data);
+      });
+    });
+
+    return pdfBuffer;
   }
 }

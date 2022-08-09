@@ -6,6 +6,7 @@ import {
   Patch,
   Param,
   Delete,
+  Res,
 } from '@nestjs/common';
 import { OnlineRequestsService } from './online-requests.service';
 import { CreateOnlineRequestDto } from './dto/create-online-request.dto';
@@ -13,6 +14,7 @@ import { UpdateOnlineRequestDto } from './dto/update-online-request.dto';
 import { AuthUser } from '@/common/helper/UserDecorator';
 import { User } from '../users/entities/user.entity';
 import { ApiTags } from '@nestjs/swagger';
+import { Response } from 'express';
 
 @Controller('requests')
 @ApiTags('online-requests')
@@ -30,6 +32,19 @@ export class OnlineRequestsController {
   @Get()
   findAll(@AuthUser() user: User) {
     return this.onlineRequestsService.findAll(user);
+  }
+
+  @Get('/pdf')
+  async getPDF(@Res() res: Response, @AuthUser() user: User): Promise<void> {
+    const buffer = await this.onlineRequestsService.generatePDF(user);
+
+    res.set({
+      'Content-Type': 'application/pdf',
+      'Content-Disposition': 'inline; filename=example.pdf',
+      'Content-Length': buffer.length,
+    });
+
+    res.end(buffer);
   }
 
   @Get(':id')

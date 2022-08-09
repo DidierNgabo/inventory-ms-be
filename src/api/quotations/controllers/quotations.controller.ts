@@ -47,6 +47,22 @@ export class QuotationsController {
 
     res.set({
       'Content-Type': 'application/pdf',
+      'Content-Disposition': 'attachment; filename=quotations.pdf',
+      'Content-Length': buffer.length,
+    });
+
+    res.end(buffer);
+  }
+
+  @Get('/pdf/:id')
+  async getSinglePDF(
+    @Res() res: Response,
+    @Param('id') id: string,
+  ): Promise<void> {
+    const buffer = await this.quotationsService.generatePdfForSingle(id);
+
+    res.set({
+      'Content-Type': 'application/pdf',
       'Content-Disposition': 'inline; filename=example.pdf',
       'Content-Length': buffer.length,
     });
