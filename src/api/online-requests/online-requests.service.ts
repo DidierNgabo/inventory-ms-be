@@ -28,7 +28,7 @@ export class OnlineRequestsService {
   }
 
   async findAll(user: User): Promise<OnlineRequest[]> {
-    if (user.role.name === 'admin') {
+    if (user.role.name.toLocaleLowerCase() !== 'customer') {
       return this.repo.find({
         relations: {
           customer: true,
@@ -40,6 +40,31 @@ export class OnlineRequestsService {
         customer: {
           id: user.id,
         },
+      },
+      relations: {
+        customer: true,
+        assignedTo: true,
+      },
+    });
+  }
+
+  async findAllByStatus(user: User): Promise<OnlineRequest[]> {
+    if (user.role.name === 'admin') {
+      return this.repo.find({
+        where:{
+          status:'created'
+        },
+        relations: {
+          customer: true,
+        },
+      });
+    }
+    return this.repo.find({
+      where: {
+        customer: {
+          id: user.id,
+        },
+        status:'created',
       },
       relations: {
         customer: true,

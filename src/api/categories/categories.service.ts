@@ -26,7 +26,7 @@ export class CategoriesService {
   }
 
   async findOne(id: string): Promise<Category> {
-    return this.repository.findOneBy({ id });
+    return this.repository.findOne({ where:{id},relations:{products:true} });
   }
 
   async update(id: string, updateCategoryDto: UpdateCategoryDto) {

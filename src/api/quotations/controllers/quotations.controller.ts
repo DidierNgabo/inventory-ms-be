@@ -1,4 +1,6 @@
+import { User } from '@/api/users/entities/user.entity';
 import { Public } from '@/common/helper/PublicDecorator';
+import { AuthUser } from '@/common/helper/UserDecorator';
 import {
   Controller,
   Get,
@@ -23,12 +25,13 @@ export class QuotationsController {
 
   @Post()
   create(@Body() createQuotationDto: CreateQuotationDto) {
+    
     return this.quotationsService.create(createQuotationDto);
   }
 
   @Get()
-  findAll() {
-    return this.quotationsService.findAll();
+  findAll(@AuthUser() user: User) {
+    return this.quotationsService.findAll(user);
   }
 
   @Get('status/count')
@@ -42,8 +45,8 @@ export class QuotationsController {
   }
 
   @Get('/pdf')
-  async getPDF(@Res() res: Response): Promise<void> {
-    const buffer = await this.quotationsService.generatePDF();
+  async getPDF(@Res() res: Response,@AuthUser() user: User): Promise<void> {
+    const buffer = await this.quotationsService.generatePDF(user);
 
     res.set({
       'Content-Type': 'application/pdf',

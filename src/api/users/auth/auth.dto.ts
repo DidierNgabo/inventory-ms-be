@@ -1,5 +1,6 @@
 import { Trim } from 'class-sanitizer';
 import {
+  IsBoolean,
   IsEmail,
   IsNotEmpty,
   IsOptional,
@@ -19,6 +20,10 @@ export class RegisterDto {
   @IsString()
   @IsOptional()
   public readonly name?: string;
+
+  @IsBoolean()
+  @IsOptional()
+  public readonly isActive:boolean;
 
   @IsString()
   @IsNotEmpty()

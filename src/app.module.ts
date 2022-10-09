@@ -11,15 +11,17 @@ import { getEnvPath } from './common/helper/env.helper';
 
 const envFilePath: string = getEnvPath(`${__dirname}/common/envs`);
 
+console.log(envFilePath);
+
 @Module({
   imports: [
     ConfigModule.forRoot({
-      envFilePath,
+     // envFilePath,
       isGlobal: true,
     }),
     TypeOrmModule.forRootAsync({ useClass: TypeOrmConfigService }),
     ApiModule,
-    MailModule,
+     MailModule,
   ],
   controllers: [AppController],
   providers: [AppService],

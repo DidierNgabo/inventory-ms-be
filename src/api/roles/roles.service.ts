@@ -18,8 +18,9 @@ export class RoleService {
     return this.repository.find();
   }
 
+
   public async findOne(id: number): Promise<Role> {
-    return this.repository.findOneBy({ id });
+    return this.repository.findOne({ where:{id},relations:{users:true} });
   }
 
   public async remove(id: number): Promise<Object> {

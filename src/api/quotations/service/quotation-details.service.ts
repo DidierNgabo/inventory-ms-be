@@ -1,3 +1,4 @@
+import { User } from '@/api/users/entities/user.entity';
 import { Injectable, NotFoundException } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Repository } from 'typeorm';
@@ -5,6 +6,7 @@ import { CreateFullQuotationDto } from '../dto/create-fullQuotation.dto';
 import { CreateQuotationDetailsDto } from '../dto/create-quotation.details.dto';
 import { UpdateQuotationDetailsDto } from '../dto/update-quotation.details.dto';
 import { QuotationDetails } from '../entities/quotation.details.entity';
+import { Quotation } from '../entities/quotation.entity';
 import { QuotationsService } from './quotations.service';
 
 @Injectable()
@@ -47,7 +49,6 @@ export class QuotationDetailsService {
   }
 
   async findByQuotation(id: string): Promise<QuotationDetails[]> {
-    //    const quotation = await this.quotationService.findOne(id);
 
     return this.repository.find({
       relations: {
@@ -90,11 +91,13 @@ export class QuotationDetailsService {
   async createQuotationAndQuotationDetails(
     dto: CreateFullQuotationDto,
   ): Promise<Object> {
+    
     const quotation = {
       status: dto.status,
       customer: dto.customer,
     };
 
+   
     let savedQuotation = await this.quotationService.create(quotation);
 
     if (savedQuotation) {

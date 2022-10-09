@@ -3,12 +3,13 @@ import {
   ArrayMinSize,
   IsArray,
   IsNotEmpty,
+  IsOptional,
   ValidateNested,
 } from 'class-validator';
 import { UpdateQuotationDetailsDto } from './update-quotation.details.dto';
 
 export class CreateFullQuotationDto {
-  @IsNotEmpty()
+  @IsOptional()
   status: string;
   @IsNotEmpty()
   customer: string;

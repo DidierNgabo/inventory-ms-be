@@ -1,9 +1,11 @@
+import { User } from '@/api/users/entities/user.entity';
 import {
   BaseEntity,
   BeforeInsert,
   Column,
   CreateDateColumn,
   Entity,
+  ManyToOne,
   OneToMany,
   PrimaryGeneratedColumn,
   UpdateDateColumn,
@@ -18,8 +20,8 @@ export class Quotation extends BaseEntity {
   status: string;
   @Column({ type: 'varchar', nullable: false })
   quotationNumber: string;
-  @Column({ type: 'varchar', nullable: false })
-  customer: string;
+  @ManyToOne(()=>User,(user)=>user.id)
+  customer: User;
   @CreateDateColumn()
   createdDate: Date;
   @UpdateDateColumn()
@@ -35,7 +37,7 @@ export class Quotation extends BaseEntity {
     });
     let previousNumber: string | null = null;
 
-    if (lastRecord) {
+    if (lastRecord.length > 0) {
       previousNumber = lastRecord[0].quotationNumber;
     }
     if (previousNumber === null) {

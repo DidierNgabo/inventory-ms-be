@@ -1,5 +1,6 @@
 import { Inspection } from '@/api/inspection/entities/inspection.entity';
 import { OnlineRequest } from '@/api/online-requests/entities/online-request.entity';
+import { Quotation } from '@/api/quotations/entities/quotation.entity';
 import { Role } from '@/api/roles/entities/role.entity';
 import { Exclude } from 'class-transformer';
 import {
@@ -49,7 +50,8 @@ export class User {
 
   @OneToMany(() => Inspection, (inspection) => inspection.id)
   inspections: Inspection[];
-
+  @OneToMany(()=>Quotation,(quotation)=>quotation.customer)
+  quotations:Quotation[];
   constructor(partial: Partial<User>) {
     Object.assign(this, partial);
   }

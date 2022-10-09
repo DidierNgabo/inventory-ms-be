@@ -5,23 +5,48 @@ import PDFDocument from 'pdfkit-table';
 import { CreateQuotationDto } from '../dto/create-quotation.dto';
 import { UpdateQuotationDto } from '../dto/update-quotation.dto';
 import { Quotation } from '../entities/quotation.entity';
+import { User } from '@/api/users/entities/user.entity';
+import { UserService } from '@/api/users/services/user.service';
 
 @Injectable()
 export class QuotationsService {
-  @InjectRepository(Quotation)
-  private readonly repository: Repository<Quotation>;
+ 
+  
+  constructor(
+    @InjectRepository(Quotation)
+    private readonly repository: Repository<Quotation>,
+    private readonly userService: UserService,
+  ){}
 
-  async create(createQuotationDto: CreateQuotationDto): Promise<Quotation> {
-    const newQuotation = { ...createQuotationDto };
 
-    const entity = Object.assign(new Quotation(), newQuotation);
+  async create(dto:CreateQuotationDto): Promise<Quotation> {
+    const newQuotation = new Quotation();
+    const user = await this.userService.findOne(+dto.customer);
+    newQuotation.customer= user;
+    newQuotation.status = 'created';
 
-    const quotation = await this.repository.save(entity);
+    const quotation = await this.repository.save(newQuotation);
     return quotation;
   }
 
-  findAll(): Promise<Quotation[]> {
-    return this.repository.find({});
+  findAll(user:User): Promise<Quotation[]> {
+    if (user.role.name.toLocaleLowerCase() === 'admin' || user.role.name.toLocaleLowerCase() ==='accountant') {
+      return this.repository.find({
+        relations: {
+          customer: true,
+        },
+      });
+    }
+    return this.repository.find({
+      where: {
+        customer: {
+          id: user.id,
+        },
+      },
+      relations: {
+        customer: true,
+      },
+    });
   }
 
   findOne(id: string): Promise<Quotation> {
@@ -36,9 +61,8 @@ export class QuotationsService {
     updateQuotationDto: UpdateQuotationDto,
   ): Promise<Object> {
     const quotation = await this.findOne(id);
-    if (updateQuotationDto.customer)
-      quotation.customer = updateQuotationDto.customer;
     if (updateQuotationDto.status) quotation.status = updateQuotationDto.status;
+    console.log(updateQuotationDto);
     await this.repository.save(quotation);
     return { message: 'quotation updated successfully', data: quotation };
   }
@@ -64,10 +88,10 @@ export class QuotationsService {
 
   async countByStatus(): Promise<Object> {
     const approved = await this.repository.count({
-      where: { status: 'Approved' },
+      where: { status: 'created' },
     });
     const rejected = await this.repository.count({
-      where: { status: 'created' },
+      where: { status: 'rejected' },
     });
     const accepted = await this.repository.count({
       where: { status: 'accepted' },
@@ -76,8 +100,8 @@ export class QuotationsService {
     return { approved, rejected, accepted };
   }
 
-  async generatePDF(): Promise<Buffer> {
-    const quotations: any = await this.findAll();
+  async generatePDF(user:User): Promise<Buffer> {
+    const quotations: any = await this.findAll(user);
     const data = quotations.map(
       ({ id, updatedDate, ...quotation }) => quotation,
     );

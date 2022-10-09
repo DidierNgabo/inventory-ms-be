@@ -1,3 +1,4 @@
+import { Public } from '@/common/helper/PublicDecorator';
 import {
   Body,
   Controller,
@@ -16,6 +17,7 @@ import { RoleService } from './roles.service';
 @ApiBearerAuth()
 @ApiTags('roles')
 @Controller('roles')
+@Public()
 export class RoleController {
   @Inject(RoleService)
   private readonly roleService: RoleService;

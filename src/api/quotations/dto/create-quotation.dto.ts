@@ -1,7 +1,7 @@
-import { IsNotEmpty } from 'class-validator';
+import { IsNotEmpty, IsOptional } from 'class-validator';
 
 export class CreateQuotationDto {
-  @IsNotEmpty()
+  @IsOptional()
   status: string;
 
   @IsNotEmpty()

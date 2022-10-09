@@ -51,7 +51,6 @@ export class OnlineRequest extends BaseEntity {
       take: 1,
     });
 
-    console.log(lastRecord);
 
     let previousNumber: string | null = null;
 

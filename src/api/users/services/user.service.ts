@@ -46,6 +46,8 @@ export class UserService {
 
     if (body.name) user.name = body.name;
 
+    if(body.isActive) user.isActive = body.isActive
+
     if (body.role) {
       const role = await this.roleService.findOne(body.role);
       user.role = role;
@@ -55,7 +57,7 @@ export class UserService {
 
   public async countByRole(role: string): Promise<Object> {
     return this.repository.count({
-      where: { role: { name: role } },
+      where: { role: { name: role.toLowerCase() } },
     });
   }
 }

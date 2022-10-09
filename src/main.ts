@@ -10,9 +10,7 @@ async function bootstrap() {
   const app: NestExpressApplication = await NestFactory.create(AppModule);
 
   const config: ConfigService = app.get(ConfigService);
-  const port: number = config.get<number>('PORT');
-  //const port: number = Number(process.env.PORT) || 4000;
-
+  const port: number = config.get<number>('PORT') || 5050;
   app.enableCors();
   app.setGlobalPrefix('api', {
     exclude: [

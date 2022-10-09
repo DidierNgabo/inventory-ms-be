@@ -34,6 +34,12 @@ export class OnlineRequestsController {
     return this.onlineRequestsService.findAll(user);
   }
 
+  @Get('/status')
+  findAllByStatus(@AuthUser() user: User) {
+    return this.onlineRequestsService.findAllByStatus(user);
+  }
+
+
   @Get('/pdf')
   async getPDF(@Res() res: Response, @AuthUser() user: User): Promise<void> {
     const buffer = await this.onlineRequestsService.generatePDF(user);

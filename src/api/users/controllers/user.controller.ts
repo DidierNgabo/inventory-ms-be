@@ -13,9 +13,6 @@ import {
   UseInterceptors,
 } from '@nestjs/common';
 import { ApiTags } from '@nestjs/swagger';
-import { Request } from 'express';
-import { RegisterDto } from '../auth/auth.dto';
-import { JwtAuthGuard } from '../auth/auth.guard';
 import { UpdateUserDto } from '../dtos/user.dto';
 import { User } from '../entities/user.entity';
 import { UserService } from '../services/user.service';
@@ -52,8 +49,8 @@ export class UserController {
   }
 
   @Put(':id')
-  @UseGuards(JwtAuthGuard)
   @UseInterceptors(ClassSerializerInterceptor)
+  @Public()
   private update(
     @Param('id') id: string,
     @Body() body: UpdateUserDto,

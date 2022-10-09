@@ -67,16 +67,17 @@ export class TransactionService {
   async update(id: string, dto: UpdateTransactionDto) {
     const toUpdated = await this.findOne(id);
     const updated = Object.assign(toUpdated, dto);
+    const product = await this.productService.findOne(updated.product);
     if (
       updated.type === 'stock out' &&
-      updated.quantity > updated.product.amountInStock
+      updated.quantity > product.amountInStock
     ) {
       throw new BadRequestException(
         'quantity can not be greater than amount in stock',
       );
     }
 
-    this.updateProductAmount(updated, updated.product);
+    this.updateProductAmount(updated, product);
 
     return await this.repo.save(updated);
   }
